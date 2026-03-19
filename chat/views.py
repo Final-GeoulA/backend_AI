@@ -8,7 +8,7 @@ from .rag_service import ask_acne_chatbot
 # APIView 상속 rest_framwork RESTAPI 클래스 뷰
 # RestFulAPI - post, get, put, delete 등을 직접 사용할 수 있다
 class ChatAskAPIView(APIView):
-    print("hello")
+    print("bye")
     def post(self, request):
         Serializer = ChatAskSerializer(data=request.data)
         # ChatField에서 만들었던 유효성 체크, 빈문자열 허용 안 하고, 500 등 체크
