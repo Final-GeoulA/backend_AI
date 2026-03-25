@@ -1,0 +1,43 @@
+# Claude Code
+CLAUDE.md
+.claude/
+
+# 환경 변수 (API 키, 비밀번호)
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# 가상환경
+venv/
+env/
+.venv/
+
+# Django
+db.sqlite3
+*.log
+media/
+
+# FAISS 벡터 인덱스 (build_index.py로 재생성 가능)
+db/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# 테스트 커버리지
+.coverage
+htmlcov/
