@@ -1,24 +1,43 @@
 from django.shortcuts import render
+from django.db import connection
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import datetime
+import json
 
 from .serializers import ChatAskSerializer
 from .rag_service import ask_acne_chatbot
-# APIView 상속 rest_framwork RESTAPI 클래스 뷰
-# RestFulAPI - post, get, put, delete 등을 직접 사용할 수 있다
+from .models import ChatLog
+
 class ChatAskAPIView(APIView):
-    print("bye")
     def post(self, request):
         Serializer = ChatAskSerializer(data=request.data)
-        # ChatField에서 만들었던 유효성 체크, 빈문자열 허용 안 하고, 500 등 체크
-        # 조건에 안 맞으면 자바에서의 throw와 같은 역할
         Serializer.is_valid(raise_exception=True)
 
         question = Serializer.validated_data["question"]
+        user_id  = request.data.get("user_id")
 
         try:
             result = ask_acne_chatbot(question)
+
+            if user_id:
+                now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+                context = json.dumps([
+                    {"role": "user", "content": question,        "time": now},
+                    {"role": "ai",   "content": result["answer"],"time": now},
+                ], ensure_ascii=False)
+
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT SEQ_CHAT_LOG.NEXTVAL FROM DUAL")
+                    next_id = cursor.fetchone()[0]
+
+                ChatLog.objects.create(
+                    chat_log_id=next_id,
+                    user_id=user_id,
+                    context=context
+                )
+
             return Response(result, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(
