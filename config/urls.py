@@ -22,4 +22,5 @@ urlpatterns = [
     path('api/chat/', include('chat.urls')),
     path('text_emotion/',include('text_emotion.urls')),
     path('api/imgemotion/', include('imgemotion.urls')),
+    path('api/recogface/', include('recogface.urls')),
 ]

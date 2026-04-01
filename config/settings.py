@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'chat',
     'text_emotion',
+    'recogface',
+    
 ]
 
 MIDDLEWARE = [
