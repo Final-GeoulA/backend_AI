@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'text_emotion',
     'recogface',
-    
+    'skin_disease',
+
 ]
 
 MIDDLEWARE = [
