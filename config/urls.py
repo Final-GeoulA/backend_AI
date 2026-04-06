@@ -22,4 +22,5 @@ urlpatterns = [
     path('text_emotion/',include('text_emotion.urls')),
     path('api/imgemotion/', include('imgemotion.urls')),
     path('api/recogface/', include('recogface.urls')),
+    path('api/skin/', include('skin_disease.urls')),
 ]
