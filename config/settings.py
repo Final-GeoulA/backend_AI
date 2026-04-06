@@ -46,7 +46,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
-    'chat',
     'text_emotion',
     'recogface',
     
