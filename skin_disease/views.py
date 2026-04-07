@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-MODEL_PATH = os.path.join('/home/ict01/backend_ai/models/skin_model_final.keras')
+MODEL_PATH = os.path.join('/home/ict/backend_ai/models/skin_model_final.keras')
 model = load_model(MODEL_PATH)
 
 CLASSES = ['건선', '아토피', '여드름', '염증성']

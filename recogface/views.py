@@ -14,12 +14,12 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 app = FaceAnalysis(allowed_modules=['detection','recognition'],providers=['CPUExecutionProvider'])
 app.prepare(ctx_id=0,det_thresh=0.5,det_size=(640,640))
 
-MASK_MODEL_PATH = os.path.join('/home/ict01/backend_ai/recogface/models/MaskModel.keras')
+MASK_MODEL_PATH = os.path.join('/home/ict/backend_ai/recogface/models/MaskModel.keras')
 mask_model = load_model(MASK_MODEL_PATH)
 
-ref_img1 = cv2.imread('/home/ict01/backend_ai/recogface/images/admin1.jpg')
-ref_img2 = cv2.imread('/home/ict01/backend_ai/recogface/images/admin2.jpg')
-ref_img3 = cv2.imread('/home/ict01/backend_ai/recogface/images/admin3.png')
+ref_img1 = cv2.imread('/home/ict/backend_ai/recogface/images/admin1.jpg')
+ref_img2 = cv2.imread('/home/ict/backend_ai/recogface/images/admin2.jpg')
+ref_img3 = cv2.imread('/home/ict/backend_ai/recogface/images/admin3.png')
 ref_faces1 = app.get(ref_img1)
 ref_faces2 = app.get(ref_img2)
 
