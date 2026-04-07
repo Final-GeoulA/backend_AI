@@ -18,13 +18,12 @@ max_len=100
 def Board_emotion(request):
     try:
         #param처리(POST가 아니면 오류 응답 json으로 처리)
-        model = tf.keras.models.load_model("/home/ict01/backend_ai/models/Text_emotion_model.keras")
+        model = tf.keras.models.load_model("/home/ict/backend_ai/models/best_Text_emotion_model.keras")
         sp = spm.SentencePieceProcessor()
-        sp.load("/home/ict01/backend_ai/models/Text_emotion.model")
+        sp.load("/home/ict/backend_ai/models/best_Text_emotion_model.model")
         if request.method != "POST":
             return JsonResponse({'error':"POST 방식만 허용하겠습니다"},status=405)
         body = json.loads(request.body.decode('utf-8'))
-        
         sample_texts = [body.get('content',None)]
         sample_seq = [sp.encode_as_ids(text) for text in sample_texts]
         sample_pad = pad_sequences(sample_seq,maxlen=max_len)
