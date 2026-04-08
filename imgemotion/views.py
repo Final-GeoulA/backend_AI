@@ -1,10 +1,31 @@
-import httpx
-import json
 from django.http import JsonResponse
+import urllib.request # 이건 모델 불러올 때(fer = HSEmotionRecognizer(model_name='enet_b0_8_best_afew')) 내부에서 쓰임
+from hsemotion_onnx.facial_emotions import HSEmotionRecognizer
+import base64
+import numpy as np
+import cv2
+from django.views.decorators.csrf import csrf_exempt
 
-# 서버는 도커 컨테이너 속 fastAPI로 띄워놓고 장고를 라우터처럼 씀(모델별 의존 패키지 요구 버전이 상이해서 일단 분리해놓음)
-async def qwer(request):
-    async with httpx.AsyncClient() as client:	# httpx 비동기 클라이언트(with 종료시 자동 연결 해제)
-        data = json.loads(request.body)			# request의 body데이터는 {'base64img': 이미지문자열} 형태
-        response = await client.post("http://192.168.0.91:5678/ktgmodel", content=data['base64img'], headers={"Content-Type": "text/plain"})
-    return JsonResponse(response.json())		# {'emotion':감정, 'scores':수치 리스트} 형태 그대로 전달
+face_cascade = cv2.CascadeClassifier( cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+fer = HSEmotionRecognizer(model_name='enet_b0_8_best_afew')
+
+@csrf_exempt
+def predict_emotion(request):
+	if request.method == 'POST' and 'image' in request.FILES:
+		uploaded_file = request.FILES['image']
+
+		np_arr = np.frombuffer(uploaded_file.read(), np.uint8)
+		img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+		img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+		img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+		faces = face_cascade.detectMultiScale(img_gray, scaleFactor=1.1, minNeighbors=5)
+
+		if len(faces) == 0:
+			return JsonResponse({'success': False,'message': '얼굴 못찾음'})
+		x, y, w, h = faces[0]
+		face_img = img_rgb[y:y+h, x:x+w]
+		emotion, scores = fer.predict_emotions(face_img, logits=False)
+		return JsonResponse({'success': True, 'emotion': emotion, 'scores': scores.tolist()})
+	return JsonResponse({'success': False, 'message': 'POST 방식으로 이미지를 전송해주세요'})
